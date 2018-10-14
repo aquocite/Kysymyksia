@@ -42,4 +42,24 @@ public class Vastaus {
         return oikein;
     }
     
+    @Override
+    public String toString() {
+        if(this.oikein) {
+            return teksti + "  " + "OIKEIN";
+        }
+        return teksti + "  " + "VÄÄRIN";
+    }
+    
+    public String huijaus() {
+        
+        return "/poistavastaus/" + kysymysId;
+       
+    }
+    
+    public String huijaus2() {
+        
+        return "/lisaavastaus/" + kysymysId;
+        
+    }
+    
 }

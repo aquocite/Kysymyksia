@@ -14,15 +14,17 @@
         
         <ul>
             <li th:each="arvo : ${kysymykset}">
-                <span th:text="${arvo}">
-                    Tähän tulee kysymyksen toString-esitys
-                </span>
+                <a th:href="@{~/{id}(id=${arvo.id})}">
+                    <span th:text="${arvo}">Kysymyksen toString-esitys</span>
+                </a>
                 <form action="/poista" method="POST">
                     <input type="hidden" name="tunnus" th:value="${arvo.id}"/>
                     <input type="submit" value="poista"/>                    
                 </form>
             </li>
         </ul>
+        
+        <h2>Uusi Kysymys</h2>
         
         <form action="/lisaa" method="POST">
             <input type="text" name="kurssi" value="kurssi"/>

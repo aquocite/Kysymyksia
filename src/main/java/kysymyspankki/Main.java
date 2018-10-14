@@ -33,7 +33,7 @@ public class Main {
         KysymysDao kysymykset = new KysymysDao(db);
         VastausDao vastaukset = new VastausDao(db);
         
-        Spark.get("*", (req, res) -> {
+        Spark.get("/", (req, res) -> {
             HashMap map = new HashMap<>();
             
             map.put("kysymykset", kysymykset.findAll());
@@ -46,7 +46,7 @@ public class Main {
             Kysymys k = new Kysymys(-1, req.queryParams("kurssi"), req.queryParams("aihe"), req.queryParams("teksti"));
             kysymykset.save(k);
             
-            res.redirect("*");
+            res.redirect("/");
             
             return "";
             
@@ -56,10 +56,55 @@ public class Main {
             
             kysymykset.delete(Integer.parseInt(req.queryParams("tunnus")));
             
-            res.redirect("*");
+            res.redirect("/");
             
             return "";
         });
+        
+        Spark.get("/:id", (req, res) -> {
+            HashMap map = new HashMap<>();
+            
+            map.put("vastaukset", vastaukset.findWithKysymys(Integer.parseInt(req.params(":id"))));
+            map.put("kysymys", "/lisaavastaus/" + Integer.parseInt(req.params(":id")));
+            
+            //System.out.println(req.queryParams(":id"));
+
+            return new ModelAndView(map, "vastaus");
+        }, new ThymeleafTemplateEngine());
+        
+        Spark.post("/lisaavastaus/:id", (req, res) -> {
+            
+            Boolean x = true;
+            
+            if(req.queryParams("oikein") == null) {
+                x = false;
+            }
+            
+            Vastaus v = new Vastaus(-1, Integer.parseInt(req.params(":id")), 
+                    req.queryParams("teksti"), x);
+            
+            vastaukset.save(v);
+            
+            res.redirect("/" + Integer.parseInt(req.params(":id")));            
+            
+            //System.out.println(req.queryParams("oikein"));
+            
+            return "";
+            
+        });
+        
+        Spark.post("/poistavastaus/:id", (req, res) -> {
+            
+            vastaukset.delete(Integer.parseInt(req.queryParams("kysymyksenTunnus")));
+            //System.out.println(req.queryParams("kysymyksenTunnus"));
+            
+            res.redirect("/" + Integer.parseInt(req.params(":id")));
+            
+            //Redirectaa nyt väärälle sivulle - ei enää
+            
+           return ""; 
+        });
+        
     }
     
 }

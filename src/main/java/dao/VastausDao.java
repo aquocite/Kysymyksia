@@ -102,6 +102,34 @@ public class VastausDao {
         
     }
     
+    public List<Vastaus> findWithKysymys(Integer kysymysKey) throws SQLException {
+        
+        ArrayList<Vastaus> l = new ArrayList<>();
+        
+        Connection c = db.getConnection();
+        
+        PreparedStatement s = c.prepareStatement("SELECT * FROM Vastaus WHERE kysymysID = ?");
+        s.setInt(1, kysymysKey);
+        
+        
+        ResultSet r = s.executeQuery();
+        
+        while(r.next()) {
+        
+            Vastaus v = new Vastaus(r.getInt("id"), r.getInt("kysymysID"), r.getString("teksti"), r.getBoolean("oikein"));
+
+            l.add(v);
+        
+        }
+        
+        s.close();
+        r.close();
+        c.close();
+        
+        return l;
+        
+    }
+    
     public Vastaus save(Vastaus v) throws SQLException {
         
         Connection c = db.getConnection();
