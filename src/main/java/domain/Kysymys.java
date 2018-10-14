@@ -40,4 +40,9 @@ public class Kysymys {
         return teksti;
     }
     
+    @Override
+    public String toString() {
+        return kurssi + ", " + aihe + ", " + teksti; 
+    }
+    
 }

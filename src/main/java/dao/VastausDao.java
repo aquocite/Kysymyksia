@@ -28,7 +28,7 @@ public class VastausDao {
         
         Connection c = db.getConnection();
         
-        PreparedStatement s = c.prepareStatement("SELECT * FROM Kysymys WHERE id = ?");
+        PreparedStatement s = c.prepareStatement("SELECT * FROM Vastaus WHERE id = ?");
         s.setInt(1, key);
         
         ResultSet r = s.executeQuery();

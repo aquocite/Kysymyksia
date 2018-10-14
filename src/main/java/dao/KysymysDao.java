@@ -51,7 +51,7 @@ public class KysymysDao {
         
         Connection c = db.getConnection();
         
-        PreparedStatement s = c.prepareStatement("SELECT * FROM Asiakas");
+        PreparedStatement s = c.prepareStatement("SELECT * FROM Kysymys");
         
         
         ResultSet rs = s.executeQuery();
@@ -77,7 +77,7 @@ public class KysymysDao {
         
         Connection c = db.getConnection();
         
-        PreparedStatement s = c.prepareStatement("SELECT * FROM Asiakas WHERE kurssi = ?");
+        PreparedStatement s = c.prepareStatement("SELECT * FROM Kysymys WHERE kurssi = ?");
         s.setString(1, kurssi);       
         
         ResultSet rs = s.executeQuery();
@@ -104,7 +104,7 @@ public class KysymysDao {
         
         Connection c = db.getConnection();
         
-        PreparedStatement s = c.prepareStatement("SELECT * FROM Asiakas WHERE kurssi = ?");
+        PreparedStatement s = c.prepareStatement("SELECT * FROM Kysymys WHERE kurssi = ?");
         s.setString(1, aihe);       
         
         ResultSet rs = s.executeQuery();
@@ -153,6 +153,19 @@ public class KysymysDao {
 
         stmt.close();
         c.close();
+    }
+    
+    public void delete2 (String t) throws SQLException {
+        
+        Connection c = db.getConnection();
+        PreparedStatement s = c.prepareStatement("DELETE FROM Kysymys WHERE teksti = ?");
+        s.setString(1, t);
+        
+        s.executeUpdate();
+        
+        s.close();
+        c.close();
+        
     }
     
 }

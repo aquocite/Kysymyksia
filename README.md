@@ -1,4 +1,4 @@
-# kysymyspankki
+# tikape-runko
 
-Harjoitustyö 2
+Tietokantojen perusteet -kurssilla tehtävän web-sovelluksen pohja.
 
