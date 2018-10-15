@@ -45,9 +45,9 @@ public class Vastaus {
     @Override
     public String toString() {
         if(this.oikein) {
-            return teksti + "  " + "OIKEIN";
+            return teksti + "    " + "OIKEIN";
         }
-        return teksti + "  " + "VÄÄRIN";
+        return teksti + "    " + "VÄÄRIN";
     }
     
     public String huijaus() {

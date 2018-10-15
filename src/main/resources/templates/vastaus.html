@@ -7,7 +7,10 @@
     </head>
     
     <body>
-        <h1>Vastausvaihtoehdot</h1>
+        
+        <h1 th:text="${kysymysteksti}"></h1>
+        
+        <h2>Vastausvaihtoehdot</h2>
 
         <ul>
             <li th:each="arvo : ${vastaukset}">
@@ -15,20 +18,37 @@
                     Tähän tulee vastauksen toString-esitys
                 </span>
                 <form th:action="${arvo.huijaus()}" method="POST">
-                    <input type="hidden" name="kysymyksenTunnus" th:value="${arvo.kysymysID}"/>
+                    <input type="hidden" name="tunnus" th:value="${arvo.id}"/>
                     <input type="submit" value="poista"/>                    
                 </form>
             </li>
         </ul>
         
-        <h2>Uusi vastausvaihtoehto</h2>
+        <h3>Uusi vastausvaihtoehto</h3>
         
         <form th:action="${kysymys}" method="POST">
-            <input type="text" name="teksti" value="vastaus"/>
-            <input type="checkbox" name="oikein" value="true"/> 
+            <table>
+                <tr>
+                    <td>
+                        Vastaus:
+                    </td>
+                    <td>
+                        <input type="text" name="teksti"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Oikein:
+                    </td>
+                    <td>
+                        <input type="checkbox" name="oikein" value="true"/> 
+                    </td>
+                </tr>
+
+            </table>
             <input type="submit" value="lisaa"/>
         </form>
-        
+
         <p>  </p>
         
         <form action="/" method="GET">

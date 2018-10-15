@@ -1,0 +1,39 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <title>Otsikko</title>
+        <meta charset="utf-8" />
+    </head>
+
+    <body>
+
+        <h1>Kysymykset</h1>
+        
+        <h2>kurssi, aihe, kysymys</h2>
+        
+        <ul>
+            <li th:each="arvo : ${kysymykset}">
+                <a th:href="@{~/{id}(id=${arvo.id})}">
+                    <span th:text="${arvo}">Kysymyksen toString-esitys</span>
+                </a>
+                <form action="/poista" method="POST">
+                    <input type="hidden" name="tunnus" th:value="${arvo.id}"/>
+                    <input type="submit" value="poista"/>                    
+                </form>
+            </li>
+        </ul>
+        
+        <h2>Uusi Kysymys</h2>
+        
+        <form action="/lisaa" method="POST">
+            <input type="text" name="kurssi" value="kurssi"/>
+            <input type="text" name="aihe" value="aihe"/>
+            <input type="text" name="teksti" value="kysymysteksti"/>
+            <input type="submit" value="lisaa"/>
+        </form>
+        
+        <p><font color="red">Anna kaikki tiedot!</font></p>
+
+    </body>
+</html>

@@ -7,10 +7,7 @@
     </head>
     
     <body>
-        
-        <h1 th:text="${kysymysteksti}"></h1>
-        
-        <h2>Vastausvaihtoehdot</h2>
+        <h1>Vastausvaihtoehdot</h1>
 
         <ul>
             <li th:each="arvo : ${vastaukset}">
@@ -24,7 +21,7 @@
             </li>
         </ul>
         
-        <h3>Uusi vastausvaihtoehto</h3>
+        <h2>Uusi vastausvaihtoehto</h2>
         
         <form th:action="${kysymys}" method="POST">
             <table>
@@ -48,13 +45,15 @@
             </table>
             <input type="submit" value="lisaa"/>
         </form>
-
+        
         <p>  </p>
         
         <form action="/" method="GET">
             <input type="submit" value="takaisin"/>
         </form>
 
+        <p><font color="red">Anna vastausteksti!</font></p>
         
     </body>
 </html>
+

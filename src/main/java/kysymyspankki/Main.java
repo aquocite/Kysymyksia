@@ -10,7 +10,7 @@ package kysymyspankki;
  *
  * @author iltal_000
  */
-import java.util.HashMap;
+import java.util.*;
 import spark.ModelAndView;
 import spark.Spark;
 import spark.template.thymeleaf.ThymeleafTemplateEngine;
@@ -36,7 +36,21 @@ public class Main {
         Spark.get("/", (req, res) -> {
             HashMap map = new HashMap<>();
             
+            ArrayList<String> kurssit = new ArrayList<>();
+            ArrayList<String> aiheet = new ArrayList<>();
+            
+            for(Kysymys k : kysymykset.findAll()) {
+                if(!kurssit.contains(k.getKurssi())) {
+                    kurssit.add(k.getKurssi());
+                }
+                if(!aiheet.contains(k.getAihe())) {
+                    aiheet.add(k.getAihe());
+                }
+            }
+            
             map.put("kysymykset", kysymykset.findAll());
+            map.put("kurssit", kurssit);
+            map.put("aiheet", aiheet);
 
             return new ModelAndView(map, "index");
         }, new ThymeleafTemplateEngine());
@@ -44,6 +58,14 @@ public class Main {
         Spark.post("/lisaa", (req, res) -> {
             
             Kysymys k = new Kysymys(-1, req.queryParams("kurssi"), req.queryParams("aihe"), req.queryParams("teksti"));
+            
+            if(k.getKurssi().isEmpty() || k.getAihe().isEmpty() || k.getTeksti().isEmpty()) {
+                
+                res.redirect("/kysymysvirhe");
+                return "";
+                
+            }
+            
             kysymykset.save(k);
             
             res.redirect("/");
@@ -61,11 +83,36 @@ public class Main {
             return "";
         });
         
+        Spark.get("/kysymysvirhe", (req, res) -> {
+            
+            HashMap map = new HashMap<>();
+            
+            ArrayList<String> kurssit = new ArrayList<>();
+            ArrayList<String> aiheet = new ArrayList<>();
+            
+            for(Kysymys k : kysymykset.findAll()) {
+                if(!kurssit.contains(k.getKurssi())) {
+                    kurssit.add(k.getKurssi());
+                }
+                if(!aiheet.contains(k.getAihe())) {
+                    aiheet.add(k.getAihe());
+                }
+            }
+            
+            map.put("kysymykset", kysymykset.findAll());
+            map.put("kurssit", kurssit);
+            map.put("aiheet", aiheet);
+
+            return new ModelAndView(map, "virheindex");
+            
+        }, new ThymeleafTemplateEngine());
+        
         Spark.get("/:id", (req, res) -> {
             HashMap map = new HashMap<>();
             
             map.put("vastaukset", vastaukset.findWithKysymys(Integer.parseInt(req.params(":id"))));
             map.put("kysymys", "/lisaavastaus/" + Integer.parseInt(req.params(":id")));
+            map.put("kysymysteksti", kysymykset.findOne(Integer.parseInt(req.params(":id"))).getTeksti());
             
             //System.out.println(req.queryParams(":id"));
 
@@ -83,6 +130,14 @@ public class Main {
             Vastaus v = new Vastaus(-1, Integer.parseInt(req.params(":id")), 
                     req.queryParams("teksti"), x);
             
+            if(req.queryParams("teksti").isEmpty()) {
+                
+                res.redirect("/virhe/" + Integer.parseInt(req.params(":id")));
+                
+                return "";
+                
+            }
+            
             vastaukset.save(v);
             
             res.redirect("/" + Integer.parseInt(req.params(":id")));            
@@ -93,9 +148,22 @@ public class Main {
             
         });
         
+        Spark.get("/virhe/:id", (req, res) -> {
+            
+            HashMap map = new HashMap<>();
+            
+            map.put("vastaukset", vastaukset.findWithKysymys(Integer.parseInt(req.params(":id"))));
+            map.put("kysymys", "/lisaavastaus/" + Integer.parseInt(req.params(":id")));
+            
+            //System.out.println(req.queryParams(":id"));
+
+            return new ModelAndView(map, "virhevastaus");
+            
+        }, new ThymeleafTemplateEngine());
+        
         Spark.post("/poistavastaus/:id", (req, res) -> {
             
-            vastaukset.delete(Integer.parseInt(req.queryParams("kysymyksenTunnus")));
+            vastaukset.delete(Integer.parseInt(req.queryParams("tunnus")));
             //System.out.println(req.queryParams("kysymyksenTunnus"));
             
             res.redirect("/" + Integer.parseInt(req.params(":id")));
