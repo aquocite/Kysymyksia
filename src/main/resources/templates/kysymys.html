@@ -2,13 +2,35 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
     <head>
-        <title>Otsikko</title>
+        <title>Kysymykset</title>
         <meta charset="utf-8" />
     </head>
 
     <body>
 
         <h1>Kysymykset</h1>
+        
+        <ul>
+            <li th:each="kurssi : ${kurssit}">
+                <h2 th:text="${kurssi}">kurssin nimi</h2>
+                <ul>
+                    <li th:each="aihe : ${kurssi.getAiheet()}">
+                        <h3 th:text="${aihe}">aihe</h3>
+                        <ul>
+                            <li th:each="k : ${kurssi.getKysymyksetWithAihe(aihe.toString())}">
+                                <a th:href="@{~/{id}(id=${k.id})}">
+                                    <span th:text="${k.getTeksti()}">Kysymyksen toString-esitys</span>
+                                </a>
+                                <form action="/poista" method="POST">
+                                    <input type="hidden" name="tunnus" th:value="${k.id}"/>
+                                    <input type="submit" value="poista"/>                    
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
         
         
         <h2>Uusi Kysymys</h2>

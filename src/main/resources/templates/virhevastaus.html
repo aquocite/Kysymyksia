@@ -2,12 +2,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
     
     <head>
-        <title>Otsikko</title>
+        <title>Virhe</title>
         <meta charset="utf-8" />
     </head>
     
     <body>
-        <h1>Vastausvaihtoehdot</h1>
+        
+        <h1 th:text="${kysymysteksti}"></h1>
+        
+        <h2>Vastausvaihtoehdot</h2>
 
         <ul>
             <li th:each="arvo : ${vastaukset}">
@@ -21,7 +24,7 @@
             </li>
         </ul>
         
-        <h2>Uusi vastausvaihtoehto</h2>
+        <h3>Uusi vastausvaihtoehto</h3>
         
         <form th:action="${kysymys}" method="POST">
             <table>

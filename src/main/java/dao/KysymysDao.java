@@ -10,7 +10,7 @@ package dao;
  * @author iltal_000
  */
 import database.Database;
-import domain.Kysymys;
+import domain.*;
 import java.sql.*;
 import java.util.*;
 
@@ -35,7 +35,8 @@ public class KysymysDao {
             return null;
         }
         
-        Kysymys k = new Kysymys(r.getInt("id"), r.getString("kurssi"), r.getString("aihe"), r.getString("teksti"));
+        Kysymys k = new Kysymys(r.getInt("id"), new Kurssi(r.getString("kurssi"))
+                , new Aihe(r.getString("aihe")), r.getString("teksti"));
         
         s.close();
         r.close();
@@ -58,7 +59,8 @@ public class KysymysDao {
         
         while(rs.next()) {
         
-            Kysymys k = new Kysymys(rs.getInt("id"), rs.getString("kurssi"), rs.getString("aihe"), rs.getString("teksti"));
+            Kysymys k = new Kysymys(rs.getInt("id"), new Kurssi(rs.getString("kurssi"))
+                    , new Aihe(rs.getString("aihe")), rs.getString("teksti"));
 
             l.add(k);
         
@@ -84,7 +86,8 @@ public class KysymysDao {
         
         while(rs.next()) {
         
-            Kysymys k = new Kysymys(rs.getInt("id"), rs.getString("kurssi"), rs.getString("aihe"), rs.getString("teksti"));
+            Kysymys k = new Kysymys(rs.getInt("id"), new Kurssi(rs.getString("kurssi"))
+                    , new Aihe(rs.getString("aihe")), rs.getString("teksti"));
 
             l.add(k);
         
@@ -98,7 +101,7 @@ public class KysymysDao {
         
     }
     
-    public List<Kysymys> findWithAihe(String aihe) throws SQLException {
+    public ArrayList<Kysymys> findWithAihe(String aihe) throws SQLException {
         
         ArrayList<Kysymys> l = new ArrayList<>();
         
@@ -111,7 +114,8 @@ public class KysymysDao {
         
         while(rs.next()) {
         
-            Kysymys k = new Kysymys(rs.getInt("id"), rs.getString("kurssi"), rs.getString("aihe"), rs.getString("teksti"));
+            Kysymys k = new Kysymys(rs.getInt("id"), new Kurssi(rs.getString("kurssi"))
+                    , new Aihe(rs.getString("aihe")), rs.getString("teksti"));
 
             l.add(k);
         
@@ -131,8 +135,8 @@ public class KysymysDao {
         
         PreparedStatement s = c.prepareStatement("INSERT INTO Kysymys"
                 + " (kurssi, aihe, teksti) VALUES (?, ?, ?)");
-        s.setString(1, k.getKurssi());
-        s.setString(2, k.getAihe());
+        s.setString(1, k.getKurssi().toString());
+        s.setString(2, k.getAihe().toString());
         s.setString(3, k.getTeksti());
         
         s.executeUpdate();

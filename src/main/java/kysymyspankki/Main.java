@@ -14,10 +14,8 @@ import java.util.*;
 import spark.ModelAndView;
 import spark.Spark;
 import spark.template.thymeleaf.ThymeleafTemplateEngine;
-import dao.KysymysDao;
-import dao.VastausDao;
-import domain.Kysymys;
-import domain.Vastaus;
+import dao.*;
+import domain.*;
 import database.Database;
 
 public class Main {
@@ -36,30 +34,39 @@ public class Main {
         Spark.get("/", (req, res) -> {
             HashMap map = new HashMap<>();
             
-            ArrayList<String> kurssit = new ArrayList<>();
-            ArrayList<String> aiheet = new ArrayList<>();
+            ArrayList<Kurssi> kurssit = new ArrayList<>();
+            ArrayList<String> nimet = new ArrayList<>();
             
             for(Kysymys k : kysymykset.findAll()) {
-                if(!kurssit.contains(k.getKurssi())) {
+                
+                if(!nimet.contains(k.getKurssi().toString())) {
                     kurssit.add(k.getKurssi());
+                    nimet.add(k.getKurssi().toString());
                 }
-                if(!aiheet.contains(k.getAihe())) {
-                    aiheet.add(k.getAihe());
+                
+            }
+            
+            for(Kurssi k : kurssit) {
+                for(Kysymys ky : kysymykset.findAll()) {
+                    if(ky.getKurssi().toString().equals(k.toString())) {
+                        k.addKysymys(ky);
+                        k.addAihe(ky.getAihe());
+                    }
                 }
             }
             
-            map.put("kysymykset", kysymykset.findAll());
             map.put("kurssit", kurssit);
-            map.put("aiheet", aiheet);
+            
 
-            return new ModelAndView(map, "index");
+            return new ModelAndView(map, "kysymys");
         }, new ThymeleafTemplateEngine());
         
         Spark.post("/lisaa", (req, res) -> {
             
-            Kysymys k = new Kysymys(-1, req.queryParams("kurssi"), req.queryParams("aihe"), req.queryParams("teksti"));
+            Kysymys k = new Kysymys(-1, new Kurssi(req.queryParams("kurssi")), 
+                    new Aihe(req.queryParams("aihe")), req.queryParams("teksti"));
             
-            if(k.getKurssi().isEmpty() || k.getAihe().isEmpty() || k.getTeksti().isEmpty()) {
+            if(k.getKurssi().toString().isEmpty() || k.getAihe().toString().isEmpty() || k.getTeksti().isEmpty()) {
                 
                 res.redirect("/kysymysvirhe");
                 return "";
@@ -87,23 +94,30 @@ public class Main {
             
             HashMap map = new HashMap<>();
             
-            ArrayList<String> kurssit = new ArrayList<>();
-            ArrayList<String> aiheet = new ArrayList<>();
+            ArrayList<Kurssi> kurssit = new ArrayList<>();
+            ArrayList<String> nimet = new ArrayList<>();
             
             for(Kysymys k : kysymykset.findAll()) {
-                if(!kurssit.contains(k.getKurssi())) {
+                
+                if(!nimet.contains(k.getKurssi().toString())) {
                     kurssit.add(k.getKurssi());
+                    nimet.add(k.getKurssi().toString());
                 }
-                if(!aiheet.contains(k.getAihe())) {
-                    aiheet.add(k.getAihe());
+                
+            }
+            
+            for(Kurssi k : kurssit) {
+                for(Kysymys ky : kysymykset.findAll()) {
+                    if(ky.getKurssi().toString().equals(k.toString())) {
+                        k.addKysymys(ky);
+                        k.addAihe(ky.getAihe());
+                    }
                 }
             }
             
-            map.put("kysymykset", kysymykset.findAll());
             map.put("kurssit", kurssit);
-            map.put("aiheet", aiheet);
 
-            return new ModelAndView(map, "virheindex");
+            return new ModelAndView(map, "virhekysymys");
             
         }, new ThymeleafTemplateEngine());
         
@@ -154,6 +168,7 @@ public class Main {
             
             map.put("vastaukset", vastaukset.findWithKysymys(Integer.parseInt(req.params(":id"))));
             map.put("kysymys", "/lisaavastaus/" + Integer.parseInt(req.params(":id")));
+            map.put("kysymysteksti", kysymykset.findOne(Integer.parseInt(req.params(":id"))).getTeksti());
             
             //System.out.println(req.queryParams(":id"));
 

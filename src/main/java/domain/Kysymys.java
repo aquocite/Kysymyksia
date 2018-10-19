@@ -13,11 +13,11 @@ package domain;
 public class Kysymys {
     
     private Integer id;
-    private String kurssi;
-    private String aihe;
+    private Kurssi kurssi;
+    private Aihe aihe;
     private String teksti;
     
-    public Kysymys(Integer i, String k, String a, String t) {
+    public Kysymys(Integer i, Kurssi k, Aihe a, String t) {
         this.id = i;
         this.kurssi = k;
         this.aihe = a;
@@ -28,11 +28,11 @@ public class Kysymys {
         return id;
     }
     
-    public String getKurssi() {
+    public Kurssi getKurssi() {
         return kurssi;
     }
     
-    public String getAihe() {
+    public Aihe getAihe() {
         return aihe;
     }
     
