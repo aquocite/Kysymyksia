@@ -1,4 +1,5 @@
-# tikape-runko
+# Kysymyspankki
 
-Tietokantojen perusteet -kurssilla tehtävän web-sovelluksen pohja.
+Toinen harjoitustyö - draftin mukainen käyttöliittymä, 
+johon voi lisätä kysymyksiä ja niille vastauksia.
 
